@@ -13,7 +13,29 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'corretto'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
       - name: Build with Gradle
         run: ./gradlew clean build
+  docker_build:
+    name: Docker build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+      - name: Docker build up
+        run: |
+          echo "Docker build: building service"
+          docker compose -p ${{ github.sha }} up --build --wait service
+          echo "Docker cleanup: removing containers"
+          docker compose -p ${{ github.sha }} rm --stop --force -v
