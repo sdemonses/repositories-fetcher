@@ -4,7 +4,6 @@ data class Repository(
     val fork: Boolean,
     val name: String,
     val owner: Owner
-
 )
 
 data class Owner(

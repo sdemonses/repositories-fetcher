@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    name: Gradle build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources

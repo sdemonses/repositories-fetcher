@@ -32,15 +32,19 @@ class AbstractApplicationTest {
         wireMockServer.resetAll()
     }
 
-    fun stubGetGithubRepositories(username: String, response: List<Repository>) {
+    fun stubGetGithubRepositories(username: String, response: List<Repository> = emptyList(), status: Int = 200) {
         wireMockServer.stubFor(
             WireMock
                 .get(WireMock.urlPathEqualTo("/git/users/$username/repos"))
                 .willReturn(
-                    aResponse()
-                        .withStatus(200)
-                        .withHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                        .withBody(objectMapper.writeValueAsString(response))
+                    when (status) {
+                        404 -> aResponse()
+                            .withStatus(404)
+                        else -> aResponse()
+                            .withStatus(200)
+                            .withHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                            .withBody(objectMapper.writeValueAsString(response))
+                    }
                 )
         )
     }
