@@ -76,7 +76,7 @@ class GithubControllerIntegrationTest : AbstractApplicationTest() {
 
         assertEquals(404, response.statusCode.value())
 
-        assertEquals("User $username not found", response.body!!.message)
+        assertEquals("User: '$username' not found", response.body!!.message)
         assertEquals(404, response.body!!.status)
     }
 

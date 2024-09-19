@@ -2,6 +2,7 @@ package com.sdemonses.repository_fetcher.controller
 
 import com.sdemonses.repository_fetcher.controller.model.RepositoriesResponse
 import com.sdemonses.repository_fetcher.service.GithubService
+import com.sdemonses.repository_fetcher.util.logger
 import com.sdemonses.repository_fetcher.validation.validateAcceptHeader
 import jakarta.validation.constraints.Min
 import org.springframework.http.HttpHeaders
@@ -28,9 +29,15 @@ class GithubController(
         @RequestHeader(name = HttpHeaders.ACCEPT, required = true) acceptHeader: String,
         @PathVariable username: String,
         @Min(1) @RequestParam(required = false) page: Int = 1,
-        @Min(1) @RequestParam(required = false) size: Int = 30
+        @Min(1) @RequestParam(required = false) size: Int = 30,
+        @RequestParam(required = false) includeForks: Boolean = false
     ): RepositoriesResponse {
+        log.info("'v1/github/users/$username/repositories' request received")
         validateAcceptHeader(acceptHeader)
-        return githubService.getAllNonForkRepositories(username, page, size)
+        return githubService.getAllNonForkRepositories(username, page, size, includeForks)
+    }
+
+    companion object {
+        private val log = logger()
     }
 }

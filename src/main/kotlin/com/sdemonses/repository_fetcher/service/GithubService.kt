@@ -3,6 +3,7 @@ package com.sdemonses.repository_fetcher.service
 import com.sdemonses.repository_fetcher.client.github.GithubClient
 import com.sdemonses.repository_fetcher.controller.model.RepositoriesResponse
 import com.sdemonses.repository_fetcher.exception.GithubUserNotFoundException
+import com.sdemonses.repository_fetcher.util.logger
 import org.springframework.stereotype.Service
 
 @Service
@@ -18,4 +19,9 @@ class GithubService(
                 mapRepositoryResponse(branches, repository)
             }
             .let { RepositoriesResponse(it) }
+            .also { log.info("${it.repositories.size} repositories found for $username") }
+
+    companion object {
+        private val log = logger()
+    }
 }

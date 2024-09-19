@@ -1,0 +1,129 @@
+openapi: "3.0.0"
+info:
+  title: "Repository fetcher API"
+  description: "This is API for repository service fetcher. Only github is currently supported. "
+  version: "1.0.0"
+paths:
+  /v1/github/users/{username}/repositories:
+    get:
+      summary: "Return all non forks repositories for github user"
+      operationId: "getNotForkRepositories"
+      parameters:
+        - name: "username"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            default: 1
+            type: "integer"
+            format: "int32"
+        - name: "size"
+          in: "query"
+          required: false
+          schema:
+            default: 30
+            type: "integer"
+            format: "int32"
+        - name: "includeForks"
+          in: "query"
+          required: false
+          schema:
+            default: false
+            type: "boolean"
+        - name: "Accept"
+          in: "header"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/RepositoriesResponse"
+        "400":
+          description: "BAD_REQUEST"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/ErrorListResponse"
+        "404":
+          description: "NOT_FOUND"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/SimpleErrorResponse"
+        "406":
+          description: "NOT_ACCEPTED"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/SimpleErrorResponse"
+        "500":
+          description: "BAD_REQUEST"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/SimpleErrorResponse"
+components:
+  schemas:
+    BranchResponse:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        lastCommit:
+          type: "string"
+      required:
+        - "name"
+        - "lastCommit"
+    RepositoryResponse:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        ownerLogin:
+          type: "string"
+        branches:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/BranchResponse"
+      required:
+        - "name"
+        - "ownerLogin"
+        - "branches"
+    RepositoriesResponse:
+      type: "object"
+      properties:
+        repositories:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/RepositoryResponse"
+      required:
+        - "repositories"
+    ErrorListResponse:
+      type: "object"
+      properties:
+        status:
+          type: "integer"
+        messages:
+          type: "array"
+          items:
+            type: "string"
+      required:
+        - "repositories"
+    SimpleErrorResponse:
+      type: "object"
+      properties:
+        status:
+          type: "integer"
+        message:
+          type: "string"
+      required:
+        - "status"
+        - "message"

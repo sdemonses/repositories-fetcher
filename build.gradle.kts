@@ -28,10 +28,12 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("net.logstash.logback:logstash-logback-encoder:7.4")
 
 	testImplementation(kotlin("test"))
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock")
+	testImplementation("io.mockk:mockk:1.13.12")
 }
 
 dependencyManagement {
